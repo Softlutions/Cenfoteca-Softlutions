@@ -40,6 +40,7 @@
   <script src="resources/view1/view1.js"></script>
   <script src="resources/view2/view2.js"></script>
   <script src="resources/view3/view3.js"></script>
+  <script src="resources/view4/view4.js"></script>
   <script src="resources/components/version/version.js"></script>
   <script src="resources/components/version/version-directive.js"></script>
   <script src="resources/components/version/interpolate-filter.js"></script>
