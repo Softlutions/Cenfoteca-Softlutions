@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.cenfotec.cenfoteca.contracts.UserRentRequest;
 import com.cenfotec.cenfoteca.ejb.Alquiler;
 import com.cenfotec.cenfoteca.ejb.TipoAlquiler;
 import com.cenfotec.cenfoteca.pojo.AlquilerPOJO;
@@ -56,11 +57,38 @@ public class RentService implements RentServiceInterface{
 		return dtos;
 	}
 	
+	
 	@Override
 	@Transactional
 	public Alquiler getById(int alquiler){
 		Alquiler alquiler2 = rentRepository.findOne(alquiler);
 		return alquiler2;
+	}
+
+	@Override
+	@Transactional
+	public List<AlquilerPOJO> getIsNotRent() {
+		List<Alquiler> tipos = rentRepository.findAllNotRentUser(3); 
+		List<AlquilerPOJO> dtos = new ArrayList<AlquilerPOJO>();
+		tipos.stream().forEach(ta ->{
+			AlquilerPOJO dto = new AlquilerPOJO();
+			BeanUtils.copyProperties(ta, dto);
+			dtos.add(dto);
+		});
+		return dtos;
+	}
+	
+	@Override
+	@Transactional
+	public List<AlquilerPOJO> getByUser(int id){		
+		List<Alquiler> tipos = rentRepository.findAllByUsuariosIdUsuario(id);
+		List<AlquilerPOJO> dtos = new ArrayList<AlquilerPOJO>();
+		tipos.stream().forEach(ta ->{
+			AlquilerPOJO dto = new AlquilerPOJO();
+			BeanUtils.copyProperties(ta, dto);
+			dtos.add(dto);
+		});
+		return dtos;
 	}
 	
 	@Override
@@ -72,5 +100,10 @@ public class RentService implements RentServiceInterface{
 	@Override
 	public void deleteRent(Alquiler alquiler){
 		rentRepository.delete(alquiler);
+	}
+
+	@Override
+	public UserRentRequest saveItemAlquilado(int idUsuario, int idAlquiler) {
+		return rentRepository.saveItemAlquilado(idUsuario, idAlquiler);
 	}
 }

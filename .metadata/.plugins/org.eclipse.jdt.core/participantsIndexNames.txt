@@ -1,0 +1,5 @@
+INDEX VERSION 1.127
+/home/enmanuel/Software/Cenfoteca-Softlutions/.metadata/.plugins/org.eclipse.jst.jsp.core/jspsearch/2146475255.index
+/cenfoteca-master/src/main/java
+/home/enmanuel/Software/Cenfoteca-Softlutions/.metadata/.plugins/org.eclipse.jst.jsp.core/jspsearch/1107688633.index
+/cenfoteca-master/src/main/java

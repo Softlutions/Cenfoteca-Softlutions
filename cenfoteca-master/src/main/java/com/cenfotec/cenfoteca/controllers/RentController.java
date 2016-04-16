@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.cenfotec.cenfoteca.contracts.RentResponse;
+import com.cenfotec.cenfoteca.contracts.UserRentRequest;
 import com.cenfotec.cenfoteca.ejb.Alquiler;
 import com.cenfotec.cenfoteca.services.RentServiceInterface;
 import com.cenfotec.cenfoteca.services.TipoAlquilerServiceInterface;
@@ -29,7 +30,7 @@ public class RentController {
 	@Autowired private ServletContext servletContext;
 	@Autowired private TipoAlquilerServiceInterface tipoAlquilerService;
 	@Autowired private RentServiceInterface rentService;
-	
+
 	@RequestMapping(value ="/create", method = RequestMethod.POST)
 	public RentResponse create(
 			@RequestParam("file") MultipartFile file,
@@ -72,6 +73,29 @@ public class RentController {
 		response.setTipos(rentService.getAllTipo());
 		return response;
 	};
+	@RequestMapping(value ="/getIsNotRent", method = RequestMethod.GET)
+	public RentResponse getIsNotRent(){
+		RentResponse response = new RentResponse();
+		response.setCode(200);
+		response.setCodeMessage("items fetch success");
+		response.setAlquileres(rentService.getIsNotRent());
+		return response;
+	};
+	
+	//@RequestMapping(value = "/getByUser/{id}", method = RequestMethod.GET)
+	//public RentResponse byUser(@PathVariable String id) {
+		
+		@RequestMapping(value = "/getByUser", method = RequestMethod.GET)
+		public RentResponse byUser() {
+		//return postService.byAuthor(first);
+		
+		RentResponse response = new RentResponse();
+		response.setCode(200);
+		response.setCodeMessage("user items fetch success");
+		response.setAlquileres(rentService.getByUser(3));
+		return response;
+	}
+	
 	
 	@RequestMapping(value ="/getById", method = RequestMethod.GET)
 	public RentResponse getById(@PathParam("pidTipoUsuario") int pidRent){
@@ -112,4 +136,22 @@ public class RentController {
 		return rs;
 	}
 	
+	@RequestMapping(value ="/saveRent", method = RequestMethod.POST)
+	public RentResponse saveItemAlquilado(@RequestBody UserRentRequest userRent){	
+		
+		RentResponse response = new RentResponse();
+		UserRentRequest state = rentService.saveItemAlquilado(userRent.getIdUsuario(), userRent.getIdAlquiler());
+		
+		if(state != null){
+			response.setCode(200);
+			response.setCodeMessage("rent saved succesfully");
+		}
+		else{	
+			//create a common webservice error codes enum or statics
+			response.setCode(409);
+			response.setErrorMessage("save conflict");
+		}
+		
+		return response;		
+	}
 }

@@ -2,11 +2,21 @@ package com.cenfotec.cenfoteca.repositories;
 
 import java.util.List;
 
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
+import com.cenfotec.cenfoteca.contracts.UserRentRequest;
 import com.cenfotec.cenfoteca.ejb.Alquiler;
-import com.cenfotec.cenfoteca.ejb.TipoAlquiler;
 
-public interface RentRepository extends CrudRepository<Alquiler,Integer> {
+public interface RentRepository extends CrudRepository<Alquiler, Integer> {
 	List<Alquiler> findAll();
+	
+	@Query(value = "SELECT * FROM Alquiler AS a  WHERE a.idAlquiler NOT IN (SELECT Alquiler_idAlquiler" +
+			" FROM UsuarioHasAlquiler AS us WHERE us.Usuario_idUsuario = ?1)", nativeQuery = true)
+	List<Alquiler> findAllNotRentUser(int idUsuario); 
+	
+	@Query(value = "INSERT INTO UsuarioHasAlquiler VALUES(?1, ?2)", nativeQuery = true)
+	UserRentRequest saveItemAlquilado(int idUsuario, int idAlquiler);
+	
+	List<Alquiler> findAllByUsuariosIdUsuario(int id);
 }
