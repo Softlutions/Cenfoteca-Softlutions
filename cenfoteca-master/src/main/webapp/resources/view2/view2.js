@@ -32,11 +32,7 @@ angular
 								$scope.alquileres = response.alquileres;
 								console.log("$scope.usuarios",$scope.usuarios)
 							});
-							
-							$scope.doClick = function (index, event){
-								$scope.requestObject = {name:$scope.alquileres[index].name,description:$scope.alquileres[index].description, idAlquiler:$scope.alquileres[index].idAlquiler};
-							}
-							
+						
 							$scope.init = function() {
 
 								$http
@@ -51,7 +47,16 @@ angular
 												});
 
 							};
-
+							
+							$scope.loadData = function(palquiler){
+								$scope.rentToEdit = palquiler;
+								$scope.idTipoAlquiler = palquiler.idTipoAlquiler;
+								$scope.name = palquiler.name;
+								$scope.description = palquiler.description;
+								$('#createButton').addClass('hidden');
+								$('#updateButton').removeClass('hidden');
+								
+							}
 							$scope.init();
 
 							$scope.onFileSelect = function($files) {
@@ -59,21 +64,23 @@ angular
 							};
 							$scope.saveRent = function(event) {
 
-								if (this.createRentForm.$valid) {
-									$scope.onError = false;
+//								if (this.createRentForm.$valid) {
+//									$scope.onError = false;
 
+//									alert('as');
 									// $files: an array of files selected, each
 									// file has name, size, and type.
 									for (var i = 0; i < $scope.files.length; i++) {
 										var file = $scope.files[i];
+										alert('ok')
 										$scope.upload = $upload
 												.upload(
-														{
+														{   
 															url : 'rest/protected/rent/create',
 															data : {
 																idTipoAlquiler : $scope.requestObject.idTipoAlquiler,
-																name : $scope.requestObject.name,
-																description : $scope.requestObject.description,
+																name : $scope.name,
+																description : $scope.description,
 															},
 															file : file,
 														})
@@ -96,30 +103,43 @@ angular
 										// .error(...)
 										// .then(success, error, progress);
 									}
-								} else {
-									$scope.onError = true;
-								}
+//								} else {
+//									$scope.onError = true;
+//								}
 							};
-
+							
 							$scope.updateRent = function(event) {
+								
+								$scope.onError = false;
+								var dataRentUpdate = {
+								
+									name : $scope.name,
+									idAlquiler:$scope.rentToEdit.idAlquiler,
+									description : $scope.description,
+									tipoAlquiler : $scope.requestObject
+								};
+
+								$http.put('rest/protected/rent/updateRent',dataRentUpdate).success(function(response) {
+									console.log("response",response)
+									$scope.rentToEdit.name = $scope.name;
+									$scope.rentToEdit.description = $scope.description;
+									$('#createButton').removeClass('hidden');
+									$('#updateButton').addClass('hidden');
+								
+							
+								});
+							};
+							
+							$scope.deleteRent = function(alquiler) {
 
 								$scope.onError = false;
-								var data = {
-									idTipoAlquiler : $scope.requestObject.idTipoAlquiler,
-									name : $scope.requestObject.name,
-									idAlquiler:2,
-									description : $scope.requestObject.description,
+								var dataDelete = {
+									idAlquiler : alquiler.idAlquiler
 								};
-								
-								$http.put('rest/protected/rent/modify',data).success(function(response) {
-									console.log("response",response)
-									alert('Bien')
-
+//								console.log($scope.rentToEdit.idAlquiler)
+								$http({method: 'DELETE',url:'rest/protected/rent/deleteRents', data:dataDelete, headers: {'Content-Type': 'application/json'}}).success(function(response) {
+									$scope.alquileres.splice($scope.alquileres.indexOf(alquiler), 1);
 								});
-								
-								// .error(...)
-								// .then(success, error, progress);
-
 							};
 
 						} ]);
