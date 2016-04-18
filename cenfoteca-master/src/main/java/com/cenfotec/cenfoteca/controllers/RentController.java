@@ -147,7 +147,6 @@ public class RentController {
 			response.setCodeMessage("rent saved succesfully");
 		}
 		else{	
-			//create a common webservice error codes enum or statics
 			response.setCode(409);
 			response.setErrorMessage("save conflict");
 		}

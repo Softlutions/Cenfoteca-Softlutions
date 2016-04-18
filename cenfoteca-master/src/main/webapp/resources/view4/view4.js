@@ -42,19 +42,19 @@ angular
 								$scope.alquilados.push($scope.alquileres[id]);
 								$scope.alquileres.splice(id,1);	
 								
-					/*			$scope.onError = false;
 								var dataCreate = {
-									idUsuario : $scope.tipoUsuario.tipo,
-									idALquiler : $scope
+									idUsuario : 1,
+									idAlquiler : 3
 								};
-								if($scope.tipoUsuario.tipo !=null){
+								
+							//	if($scope.tipoUsuario.tipo !=null){
 								$http.post('rest/protected/rent/saveRent',dataCreate).success(function(response) {
 									console.log("response",response)
-									$scope.tipoUsuarios = $scope.tipoUsuarios.concat(dataCreate);
+									
 								});
-								}else{
-									alert('Mal')
-								} */
+					//			}else{
+					//				alert('Mal')
+				//				} 
 							};
 							});
 						} 

@@ -104,6 +104,6 @@ public class RentService implements RentServiceInterface{
 
 	@Override
 	public UserRentRequest saveItemAlquilado(int idUsuario, int idAlquiler) {
-		return rentRepository.saveItemAlquilado(idUsuario, idAlquiler);
+		return null; // rentRepository.saveItemAlquilado(idUsuario, idAlquiler);
 	}
 }
