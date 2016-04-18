@@ -1,46 +1,48 @@
-<div class="container">
-    <h3 class="text-center">Alquilar item</h3>
-    <hr>
-</div>
-
 <div class="container">	
-	<h3 class="text-center">Items disponibles</h3>
+    <h3 class="text-center">Rental List</h3>
+    <hr>
+
+	<h3 class="text-center">Rentals Available</h3>
 	<table class="table">
 	    <thead>
 	      <tr>
-	      	<th class="hidden">ID</th>
-	        <th>Nombre</th> 			
-	        <th>Descripción</th>
+	        <th>Name</th> 			
+	        <th>Description</th>
+	        <th>Actions</th>
 	      </tr>
 	    </thead>
 	    <tbody ng-repeat="alquiler in alquileres">
 	      <tr>
-	        <td class="hidden">{{alquiler.idAlquiler}}</td>
 	        <td>{{alquiler.name}}</td>
 	        <td>{{alquiler.description}}</td>
-	         	<td>
-	         	<button class="btn btn-info btn-xs col-md-4" ng-class="" ng-click="saveRent($index)">Alquilar</button>
-	         	</td>
+	        <td>
+	        	<button class="btn btn-info btn-sm" ng-class="" ng-click="saveRent($index)">Rent</button>
+	        </td>
+	       	<td>
+	        	<a class="btn btn-info btn-sm" href="app#/view5/{{alquiler.idAlquiler}}">View more</a>
+	        </td>
 	        </tr>
 	    </tbody>
   	</table>
 </div>
 
 <div class="container">	
-	<h3 class="text-center">Items alquilados</h3>
+	<h3 class="text-center">My Rentals</h3>
 	<table class="table">
 	    <thead>
 	      <tr>
-	      	<th class="hidden">ID</th>
-	        <th>Nombre</th>
-	        <th>Descripción</th>
+	        <th>Name</th>
+	        <th>Description</th>
+	        <th>Actions</th>
 	      </tr>
 	    </thead>
 	    <tbody ng-repeat="alquilado in alquilados">
 	      <tr>
-	        <td class="hidden">{{alquilado.idAlquiler}}</td>
 	        <td>{{alquilado.name}}</td>
 	        <td>{{alquilado.description}}</td>
+	       	<td>
+	        	<a class="btn btn-info btn-sm" href="app#/view5/{{alquiler.idAlquiler}}">View more</a>
+	        </td>
 	        </tr>
 	    </tbody>
   	</table>
