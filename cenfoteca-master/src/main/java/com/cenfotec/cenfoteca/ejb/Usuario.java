@@ -29,8 +29,6 @@ public class Usuario implements Serializable {
 	@ManyToOne
 	private TipoUsuario tipoUsuario;
 	
-
-
 	//bi-directional many-to-many association to Alquiler
 	@ManyToMany
 	@JoinTable(

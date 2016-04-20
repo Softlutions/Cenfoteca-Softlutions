@@ -1,6 +1,7 @@
 package com.cenfotec.cenfoteca.controllers;
 
 import javax.servlet.ServletContext;
+import javax.websocket.server.PathParam;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,6 +17,8 @@ import com.cenfotec.cenfoteca.ejb.Alquiler;
 import com.cenfotec.cenfoteca.services.RentServiceInterface;
 import com.cenfotec.cenfoteca.services.TipoAlquilerServiceInterface;
 import com.cenfotec.cenfoteca.utils.Utils;
+
+
 
 /**
  * Handles requests for the application home page.
@@ -67,9 +70,9 @@ public class RentController {
 		response.setCode(200);
 		response.setCodeMessage("users fetch success");
 		response.setAlquileres(rentService.getAll());
+		response.setTipos(rentService.getAllTipo());
 		return response;
 	};
-	
 	@RequestMapping(value ="/getIsNotRent", method = RequestMethod.GET)
 	public RentResponse getIsNotRent(){
 		RentResponse response = new RentResponse();
@@ -93,15 +96,31 @@ public class RentController {
 		return response;
 	}
 	
-	@RequestMapping(value ="/modify", method = RequestMethod.PUT)
-	public RentResponse modify(@RequestBody Alquiler alquiler){
+	
+	@RequestMapping(value ="/getById", method = RequestMethod.GET)
+	public RentResponse getById(@PathParam("pidTipoUsuario") int pidRent){
+		RentResponse response = new RentResponse();
+		response.setCode(200);
+		response.setCodeMessage("users fetch success");
+		response.setAlquiler(rentService.getById(pidRent));
+		return response;
+	};
+	
+	@RequestMapping(value ="/deleteRents", method = RequestMethod.DELETE)
+	public RentResponse deleteRents(@RequestBody Alquiler alquiler){
 		RentResponse rs = new RentResponse();
 		
-		//obtengo el alquiler a modificar
-		Alquiler objAlquiler = new Alquiler();
-		objAlquiler.setIdAlquiler(2);
-		objAlquiler.setName(alquiler.getName());
-		objAlquiler.setDescription(alquiler.getDescription());
+		rentService.deleteRent(alquiler);
+		
+			rs.setCode(200);
+			rs.setCodeMessage("type user update succesfully");
+		
+		return rs;		
+	}
+	
+	@RequestMapping(value ="/updateRent", method = RequestMethod.PUT)
+	public RentResponse modify(@RequestBody Alquiler alquiler){
+		RentResponse rs = new RentResponse();
 		
 		Boolean state = rentService.saveRent(alquiler);
 		
@@ -128,7 +147,6 @@ public class RentController {
 			response.setCodeMessage("rent saved succesfully");
 		}
 		else{	
-			//create a common webservice error codes enum or statics
 			response.setCode(409);
 			response.setErrorMessage("save conflict");
 		}
