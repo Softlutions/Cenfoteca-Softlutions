@@ -17,12 +17,12 @@ angular
 		$scope.requestObject = {};
 		$scope.alquileres = [];
 		$scope.alquilados = [];
+		$scope.loggedUser = JSON.parse(localStorage.loggedUser);
 		
 		angular.element(document).ready(function () {
-			
 			$http.get('rest/protected/rent/getAll').success(function(response) {
 				$scope.alquileres = response.alquileres;
-				$http.get('rest/protected/rent/getByUser/1').success(function(response) {
+				$http.get('rest/protected/rent/getByUser/'+$scope.loggedUser.idUser).success(function(response) {
 					$scope.alquilados = response.alquileres;
 					$scope.alquilados.forEach(function(alquiler){
 						var index = $scope.alquileres.map(function(x) {return x.idAlquiler; }).indexOf(alquiler.idAlquiler);
@@ -34,17 +34,14 @@ angular
 			});						
 		});
 		
-		$scope.returnRent = function(rentId) {	
-			console.log(rentId);
+		$scope.returnRent = function(rentId) {
 			var dataCreate = {
-				idUsuario : 1,
+				idUsuario : $scope.loggedUser.idUser,
 				idAlquiler : rentId
 			};
-		 	$http({method: 'DELETE',url:'rest/protected/rent/returnRent', data:dataCreate, headers: {'Content-Type': 'application/json'}}).success(function(response) {
-			 	console.log(rentId);			 	 
+		 	$http({method: 'DELETE',url:'rest/protected/rent/returnRent', data:dataCreate, headers: {'Content-Type': 'application/json'}}).success(function(response) {			 	 
 			 	if (response.code == 200) {
 			 		var index = $scope.alquilados.map(function(x) {return x.idAlquiler; }).indexOf(rentId);
-			 		console.log($scope.alquilados.map(function(x) {return x.idAlquiler; }).indexOf(rentId));
 			 		$scope.alquileres.push($scope.alquilados[index]);
 					$scope.alquilados.splice(index,1);	
 			 	}
@@ -57,13 +54,11 @@ angular
 			$scope.alquileres.splice(index,1);	
 			
 			var dataCreate = {
-				idUsuario : 1,
+				idUsuario : $scope.loggedUser.idUser,
 				idAlquiler : selectedRent.idAlquiler
 			};
 			
-		//	if($scope.tipoUsuario.tipo !=null){
 			$http.post('rest/protected/rent/saveRent',dataCreate).success(function(response) {
-				console.log("response",response)
 				
 			});
 		};			
