@@ -11,50 +11,29 @@ angular.module('myApp.view3', ['ngRoute', 'ui.grid', 'ui.grid.edit', 'ui.grid.ce
 //**********************************************************
 //
 .controller('View3Ctrl', ['$scope','$http', '$rootScope' ,function($scope,$http,$upload) {
-	/*
-	 var unbind = $rootScope.$on('xD', function(){
-         console.log('foo');
-     });
-	
-	
-	$scope.currentFocused = "";
-	$scope.getCurrentFocus = function(){
-		var rowCol = $scope.gridApi.cellNav.getFocusedCell();
-		if(rowCol !== null) {
-			$scope.currentFocused = 'Row Id:' + rowCol.row.entity.id + ' col:' + rowCol.col.colDef.name;
-		}	 		
-		
-		$scope.gridOptions.onRegisterApi = function(gridApi){
-			 $scope.gridApi = gridApi;
-		}
-	}
-	
-	
-	*/
+	$scope.loggedUser = JSON.parse(localStorage.loggedUser);
 	
 	$scope.digameSuID = function(tipoUsuario){
-		alert(tipoUsuario.idTipoUsuario);
+		
 	}
 	
 	$scope.tipoUsuarios = [];
 	$scope.requestObject = {"pageNumber": 0,"pageSize": 0,"direction": "","sortBy": [""],"searchColumn": "string","searchTerm": "","user": {}};
 	$http.get('rest/protected/tipoUsuario/getAll').success(function(response) {
 		$scope.tipoUsuarios = response.tipoUsuarioList;
-		console.log(response.tipoUsuarioList);
 	});
 	
 	$scope.saveTypeUser = function(event){
 		$scope.onError = false;
+		
 		var dataCreate = {
 			tipo : $scope.tipoUsuario.tipo
 		};
+		
 		if($scope.tipoUsuario.tipo !=null){
-		$http.post('rest/protected/tipoUsuario/createTypeUser',dataCreate).success(function(response) {
-			console.log("response",response)
-			$scope.tipoUsuarios = $scope.tipoUsuarios.concat(dataCreate);
-		});
-		}else{
-			alert('Mal')
+			$http.post('rest/protected/tipoUsuario/createTypeUser',dataCreate).success(function(response) {
+				$scope.tipoUsuarios = $scope.tipoUsuarios.concat(dataCreate);
+			});
 		}
 	};
 	
@@ -67,25 +46,23 @@ angular.module('myApp.view3', ['ngRoute', 'ui.grid', 'ui.grid.edit', 'ui.grid.ce
 		$('#updateButton').removeClass('hidden');
 	}
 	
-	
-	
-	
 	$scope.updateTypeUser = function(ptipoUsuario) {
 		$scope.onError = false;
+		
 		var dataUpdate = {
 			idTipoUsuario : $scope.userToEdit.idTipoUsuario,
 			tipo: ptipoUsuario.tipo
 		};
-			$http.put('rest/protected/tipoUsuario/updateTypeUser',dataUpdate).success(function(response) {
-				$scope.userToEdit.tipo = ptipoUsuario.tipo;
-				$('#createButton').removeClass('hidden');
-				$('#updateButton').addClass('hidden');
-				$scope.tipoUsuario.tipo = "";
-			});
+		
+		$http.put('rest/protected/tipoUsuario/updateTypeUser',dataUpdate).success(function(response) {
+			$scope.userToEdit.tipo = ptipoUsuario.tipo;
+			$('#createButton').removeClass('hidden');
+			$('#updateButton').addClass('hidden');
+			$scope.tipoUsuario.tipo = "";
+		});
 	};
 	
 	$scope.deleteTypeUser = function(tipoUsuario) {
-
 		$scope.onError = false;
 		var dataDelete = {
 			idTipoUsuario : tipoUsuario.idTipoUsuario
