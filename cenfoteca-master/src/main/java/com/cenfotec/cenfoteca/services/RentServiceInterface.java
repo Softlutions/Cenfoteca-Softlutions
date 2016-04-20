@@ -21,6 +21,7 @@ public interface RentServiceInterface {
 	List<TipoAlquilerPOJO> getAllTipo();
 
 	List<AlquilerPOJO> getByUser(int id);
-	UserRentRequest saveItemAlquilado(int idUsuario, int idAlquiler);
+	boolean saveItemAlquilado(int idUsuario, int idAlquiler);
+	boolean returnRent(int idUsuario, int idAlquiler);
 }
 
