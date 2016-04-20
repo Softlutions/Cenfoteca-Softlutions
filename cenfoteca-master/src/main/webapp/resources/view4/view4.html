@@ -1,47 +1,61 @@
-<div class="container">	
-    <h3 class="text-center">Rental List</h3>
-    <hr>
+<div class="container">
+	<h3 class="	">Rental List</h3>
+	<hr>
+	<div class="col-md-6">
+		<div class="panel panel-success">
+			<!-- Default panel contents -->
+			<div class="panel-heading">Available Rentals</div>
+			<div class="panel-body">
+				<table class="table" ng-if="alquileres.length > 0">
+					<thead>
+						<tr>
+							<th class="col-sm-3">Name</th>
+							<th class="col-sm-6">Description</th>
+							<th class="col-sm-2">Actions</th>
+						</tr>
+					</thead>
+					<tbody ng-repeat="alquiler in alquileres">
+						<tr>
+							<td>{{alquiler.name}}</td>
+							<td>{{alquiler.description}}</td>
+							<td>
+								<button class="btn btn-info btn-sm" ng-class=""
+									ng-click="saveRent($index)">Rent</button>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+				<h5 ng-if="alquileres.length == 0">There is no rents available</h5>
+			</div>
+		</div>
+	</div>
+	<div class="col-md-6">
+		<div class="panel panel-primary">
+			<!-- Default panel contents -->
+			<div class="panel-heading">My Rentals</div>
+			<div class="panel-body">
+				<table class="table" ng-if="alquilados.length > 0">
+					<thead>
+						<tr>
+							<th class="col-sm-3">Name</th>
+							<th class="col-sm-6">Description</th>
+							<th class="col-sm-2">Actions</th>
+						</tr>
+					</thead>
+					<tbody ng-repeat="alquilado in alquilados">
+						<tr>
+							<td>{{alquilado.name}}</td>
+							<td>{{alquilado.description}}</td>
+							<td>
 
-	<h3 class="text-center">Available Rentals</h3>
-	<table class="table">
-	    <thead>
-	      <tr>
-	        <th class="col-sm-3">Name</th>
-	        <th class="col-sm-6">Description</th>
-	        <th class="col-sm-2">Actions</th>
-	      </tr>
-	    </thead>
-	    <tbody ng-repeat="alquiler in alquileres">
-	      <tr>
-	        <td>{{alquiler.name}}</td>
-	        <td>{{alquiler.description}}</td>
-	        <td>
-	        	<button class="btn btn-info btn-sm" ng-class="" ng-click="saveRent($index)">Rent</button>
-	        </td>
-	        </tr>
-	    </tbody>
-  	</table>
-</div>
-
-<div class="container">	
-	<h3 class="text-center">My Rentals</h3>
-	<table class="table">
-	    <thead>
-	      <tr>
-	        <th class="col-sm-3">Name</th>
-	        <th class="col-sm-6">Description</th>
-	        <th class="col-sm-2">Actions</th>
-	      </tr>
-	    </thead>
-	    <tbody ng-repeat="alquilado in alquilados">
-	      <tr>
-	        <td>{{alquilado.name}}</td>
-	        <td>{{alquilado.description}}</td>
-	       	<td>
-
-	        	<button class="btn btn-danger btn-sm" ng-click="returnRent(alquilado.idAlquiler)">Return</button>
-	        </td>
-	        </tr>
-	    </tbody>
-  	</table>
+								<button class="btn btn-danger btn-sm"
+									ng-click="returnRent(alquilado.idAlquiler)">Return</button>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+				<h5 ng-if="alquilados.length == 0">You don't have any rents yet</h5>
+			</div>
+		</div>
+	</div>
 </div>

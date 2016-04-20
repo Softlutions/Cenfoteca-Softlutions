@@ -43,9 +43,9 @@ angular.module('myApp.view2', [ 'ngRoute' ])
 			$scope.file = palquiler.image;
 			$scope.rentFile = palquiler.image;
 			$scope.idRent = palquiler.idAlquiler;
-			
 			$('#createButton').addClass('hidden');
 			$('#updateButton').removeClass('hidden');
+			$('#editCreaterent').modal('show');
 			
 		}
 		$scope.init();
@@ -97,6 +97,7 @@ angular.module('myApp.view2', [ 'ngRoute' ])
 						$scope.requestObject = {};
 						$scope.rentFile = null;
 					});
+					$('#editCreaterent').modal('hide');
 				}else{
 					$scope.updateRent(event);
 				}
@@ -128,6 +129,12 @@ angular.module('myApp.view2', [ 'ngRoute' ])
 				$scope.rentFile = null;
 			});
 		};
+		
+		$scope.openCreateModal = function(){
+			$('#editCreaterent').modal('show');
+			$('#createButton').removeClass('hidden');
+			$('#updateButton').addClass('hidden');
+		}
 		
 		$scope.deleteRent = function(alquiler) {
 			var dataDelete = {

@@ -51,8 +51,10 @@ angular.module('myApp.view3', ['ngRoute', 'ui.grid', 'ui.grid.edit', 'ui.grid.ce
 	}
 	
 	$scope.openCreateModal = function(){
-		$('#editCreateUserType').modal('show');
+		$('#createButton').removeClass('hidden');
+		$('#updateButton').addClass('hidden');
 		$scope.tipoUsuario =  {};
+		$('#editCreateUserType').modal('show');
 		
 	}
 	
