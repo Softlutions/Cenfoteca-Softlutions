@@ -35,34 +35,40 @@ public class RentController {
 
 	@RequestMapping(value ="/create", method = RequestMethod.POST)
 	public RentResponse create(
-			@RequestParam("file") MultipartFile file,
+			@RequestParam(value="file", required=false) MultipartFile file,
 			@RequestParam("idTipoAlquiler") int idTipoAlquiler,
 			@RequestParam("name") String name,
-			@RequestParam("description") String description){	
+			@RequestParam("description") String description,
+			@RequestParam("idRent") int idRent){	
 		
 		RentResponse rs = new RentResponse();
-		String resultFileName = Utils.writeToFile(file,servletContext);
-		if(!resultFileName.equals("")){
-			
-			Alquiler alquiler = new Alquiler();
-			alquiler.setName(name);
-			alquiler.setDescription(description);
+		
+		Alquiler alquiler;
+		
+		if(idRent > 0)
+			alquiler = rentService.getById(idRent);
+		else
+			alquiler = new Alquiler();
+		
+		if(file != null){
+			String resultFileName = Utils.writeToFile(file,servletContext);
 			alquiler.setImage(resultFileName);
-			alquiler.setTipoAlquiler(tipoAlquilerService.getTipoAlquilerById(idTipoAlquiler));
-			
-			Boolean state = rentService.saveRent(alquiler);
-			
-			if(state){
-				rs.setCode(200);
-				rs.setCodeMessage("rent created succesfully");
-			}
-			
+		}
+		
+		alquiler.setName(name);
+		alquiler.setDescription(description);
+		alquiler.setTipoAlquiler(tipoAlquilerService.getTipoAlquilerById(idTipoAlquiler));
+		
+		Boolean state = rentService.saveRent(alquiler);
+		
+		if(state){
+			rs.setCode(200);
+			rs.setCodeMessage("rent created succesfully");
 		}else{
-			//create a common webservice error codes enum or statics
 			rs.setCode(409);
 			rs.setErrorMessage("create/edit conflict");
 		}
-	
+		
 		return rs;		
 	}
 	
