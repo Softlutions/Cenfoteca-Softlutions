@@ -11,12 +11,12 @@ angular.module('myApp.view3', ['ngRoute', 'ui.grid', 'ui.grid.edit', 'ui.grid.ce
 //**********************************************************
 //
 .controller('View3Ctrl', ['$scope','$http', '$rootScope' ,function($scope,$http,$upload) {
+	
 	$scope.loggedUser = JSON.parse(localStorage.loggedUser);
 	
 	$scope.digameSuID = function(tipoUsuario){
 		
 	}
-	
 	$scope.tipoUsuarios = [];
 	$scope.requestObject = {"pageNumber": 0,"pageSize": 0,"direction": "","sortBy": [""],"searchColumn": "string","searchTerm": "","user": {}};
 	$http.get('rest/protected/tipoUsuario/getAll').success(function(response) {
@@ -35,6 +35,8 @@ angular.module('myApp.view3', ['ngRoute', 'ui.grid', 'ui.grid.edit', 'ui.grid.ce
 				$scope.tipoUsuarios = $scope.tipoUsuarios.concat(dataCreate);
 			});
 		}
+		
+		$('#editCreateUserType').modal('hide');
 	};
 	
 	$scope.loadData = function(ptipoUsuario){
@@ -44,6 +46,14 @@ angular.module('myApp.view3', ['ngRoute', 'ui.grid', 'ui.grid.edit', 'ui.grid.ce
 
 		$('#createButton').addClass('hidden');
 		$('#updateButton').removeClass('hidden');
+		
+		$('#editCreateUserType').modal('show');
+	}
+	
+	$scope.openCreateModal = function(){
+		$('#editCreateUserType').modal('show');
+		$scope.tipoUsuario =  {};
+		
 	}
 	
 	$scope.updateTypeUser = function(ptipoUsuario) {
@@ -60,8 +70,9 @@ angular.module('myApp.view3', ['ngRoute', 'ui.grid', 'ui.grid.edit', 'ui.grid.ce
 			$('#updateButton').addClass('hidden');
 			$scope.tipoUsuario.tipo = "";
 		});
+		
+		$('#editCreateUserType').modal('hide');
 	};
-	
 	$scope.deleteTypeUser = function(tipoUsuario) {
 		$scope.onError = false;
 		var dataDelete = {
@@ -69,7 +80,12 @@ angular.module('myApp.view3', ['ngRoute', 'ui.grid', 'ui.grid.edit', 'ui.grid.ce
 		};
 		
 		$http({method: 'DELETE',url:'rest/protected/tipoUsuario/deleteTypeUser', data:dataDelete, headers: {'Content-Type': 'application/json'}}).success(function(response) {
-			$scope.tipoUsuarios.splice($scope.tipoUsuarios.indexOf(tipoUsuario), 1);
+			if(response.code == 200){
+				$scope.tipoUsuarios.splice($scope.tipoUsuarios.indexOf(tipoUsuario), 1);
+				toastr.success(response.codeMessage)
+			}else{
+				toastr.error(response.codeMessage, 'Error')
+			}
 		});
 	};
 }]);

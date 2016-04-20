@@ -1,8 +1,11 @@
 <div class="container">
 	<div class="row">
-		<h3 class="text-center">Users type</h3>
-    	<hr>
-	
+		<h3 class="">
+			Users type
+			<button type="button" class="btn btn-success pull-right" ng-click="openCreateModal()">Create</button>
+		</h3>
+		<hr>
+
 		<div>
 			<div class="container">
 
@@ -10,7 +13,7 @@
 					<thead>
 						<tr>
 							<th class="hidden">ID</th>
-							<th>Type</th>
+							<th class="col-md-10">Type</th>
 							<th>Actions</th>
 						</tr>
 					</thead>
@@ -19,9 +22,9 @@
 							<td class="hidden">{{tipoUsuario.idTipoUsuario}}</td>
 							<td>{{tipoUsuario.tipo}}</td>
 							<td>
-								<button class="btn btn-info btn-sm" ng-class=""
+								<button class="btn btn-info btn-sm col-md-6" ng-class=""
 									ng-click="loadData(tipoUsuario)">Edit</button>
-								<button class="btn btn-danger btn-sm"
+								<button class="btn btn-danger btn-sm col-md-6"
 									ng-click="deleteTypeUser(tipoUsuario)">Delete</button>
 							</td>
 						</tr>
@@ -29,24 +32,39 @@
 				</table>
 			</div>
 		</div>
-
 	</div>
 </div>
 
-<div class="container">
-	<div class="col-sm-8">
-		<form>
-			<div class='form-group'>
-				<label>Type</label>
-				<input type="text" id="tipoUsuario" class="form-control" ng-model="tipoUsuario.tipo" /> <span
-						ng-show="onError && createRentForm.name.$error.required"
-						class="help-inline">Required </span>
+<!-- Modal -->
+<div id="editCreateUserType" class="modal fade" role="dialog">
+	<div class="modal-dialog">
+
+		<!-- Modal content-->
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal">&times;</button>
+				<h4 class="modal-title">Modal Header</h4>
 			</div>
-		
-			<button id="createButton" class="btn btn-primary"
-				ng-click="saveTypeUser($event)">Create</button>
-			<button id="updateButton" class="btn btn-primary hidden"
-				ng-click="updateTypeUser(tipoUsuario)">Update</button>
-		</form>
+			<div class="modal-body">
+				<form>
+					<div class='form-group'>
+						<label>Type</label> <input type="text" id="tipoUsuario"
+							class="form-control" ng-model="tipoUsuario.tipo" /> <span
+							ng-show="onError && createRentForm.name.$error.required"
+							class="help-inline">Required </span>
+					</div>
+
+
+				</form>
+			</div>
+			<div class="modal-footer">
+				<button id="createButton" class="btn btn-primary"
+					ng-click="saveTypeUser($event)">Create</button>
+				<button id="updateButton" class="btn btn-primary hidden"
+					ng-click="updateTypeUser(tipoUsuario)">Update</button>
+				<button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+			</div>
+		</div>
+
 	</div>
 </div>

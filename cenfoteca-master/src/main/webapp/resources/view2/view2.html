@@ -1,81 +1,97 @@
 <div class="container">
-	<div class="row">
-		<h3 class="text-center">Rentals</h3>
-   		<hr>
+	<br>
 	
-		<div>
-			<div class="container">
+		<h1 class="">Crear Alquiler <button type="button" class="btn btn-info btn-lg pull-right"
+			data-toggle="modal" data-target="#myModal">Create</button></h1>
+		
+</div>
+<br>
+<!-- Modal -->
+<div id="myModal" class="modal fade" role="dialog">
+	<div class="modal-dialog">
+		<!-- Modal content-->
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal">&times;</button>
+				<h4 class="modal-title">Modal Header</h4>
+			</div>
+			<div class="modal-body">
+				<form id="createRentForm" name="createRentForm"
+					class="form-horizontal" role="form">
+					<div class='form-group'>
+						<div ng-class="{error: onError && createRentForm.email.$invalid}">
+							<label class='col-sm-3 control-label'>Rent Type</label>
+							<div class="col-sm-8">
+								<select name="tipoalquiler" id="tipoalquiler"
+									class="form-control" ng-model="requestObject.idTipoAlquiler"
+									ng-options="ta.idTipoAlquiler as ta.name for ta in tipoAlquilerList"
+									required>
+								</select> <span
+									ng-show="onError && createRentForm.tipoalquiler.$error.required"
+									class="help-inline">Required </span>
+							</div>
+						</div>
+					</div>
 
-				<table class="table">
-					<thead>
-						<tr>
-							<th class="hidden">ID</th>
-							<th>Name</th>
-							<th>Description</th>
-							<th>Type</th>
-							<th>Actions</th>
-						</tr>
-					</thead>
-					<tbody ng-repeat="alquiler in alquileres">
-						<tr>
-							<td class="hidden">{{alquiler.idAlquiler}}</td>
-							<td>{{alquiler.name}}</td>
-							<td>{{alquiler.description}}</td>
-							<td>{{alquiler.tipoAlquiler.name}}</td>
-							<td>
-								<button class="btn btn-info btn-sm" ng-class=""
-									ng-click="loadData(alquiler)">Edit</button>
-								<button class="btn btn-danger btn-sm"
-									ng-click="deleteRent(alquiler)">Delete</button>
-							</td>
+					<div class='form-group'>
+						<div ng-class="{error: onError && createRentForm.name.$invalid}">
+							<label class='col-sm-3 control-label'>Name</label>
+							<div class="col-sm-8">
+								<input type="text" id="name" class="form-control" name="name"
+									placeholder="Required" required ng-model="requestObject.name" />
+								<span ng-show="onError && createRentForm.name.$error.required"
+									class="help-inline">Required </span>
+							</div>
+						</div>
+					</div>
 
-						</tr>
-					</tbody>
-				</table>
+					<div class='form-group'>
+						<div
+							ng-class="{error: onError && createRentForm.description.$invalid}">
+							<label class='col-sm-3 control-label'>Description</label>
+							<div class="col-sm-8">
+								<textarea id="description" class="form-control" rows="3"
+									name="description" placeholder="Required" required
+									ng-model="requestObject.description">
+					</textarea>
+								<span
+									ng-show="onError && createRentForm.description.$error.required"
+									class="help-inline">Required </span>
+							</div>
+						</div>
+					</div>
+
+					<div class='form-group'>
+						<div
+							ng-class="{error: onError && createRentForm.inputfile.$invalid}">
+							<label class='col-sm-3 control-label'>Cover Image</label>
+
+							<div class="col-sm-8">
+								<input type="file" name="inputfile" required
+									ng-file-select="onFileSelect($files)"> <span
+									ng-show="onError && createRentForm.inputfile.$error.required"
+									class="help-inline">Required </span>
+							</div>
+
+						</div>
+					</div>
+					<!-- clear button todo -->
+				</form>
+			</div>
+			<div class="modal-footer">
+				<button class="btn btn-primary" ng-click="saveRent($event)">Create</button>
+				<button class="btn btn-primary" ng-click="updateRent($event)">Update</button>
+				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
 			</div>
 		</div>
 
 	</div>
 </div>
 
+
 <div class="container">
-	<div class='form-group'>
-		<div class="col-sm-8">
-			<form>
-				<div class="form-group">
-					<label>Name</label>
-					<input type="text" id="alquilerName" class="form-control" ng-model="name" required /> 
-				</div>
-				
-				<div class="form-group">
-					<label>Description</label>
-					<input type="text" id="alquilerDescription" required class="form-control" ng-model="description" /> 
-				</div>
-				
-				<div class="form-group">
-					<label>Rental type</label>
-					<select
-						name="tipoalquiler" id="tipoalquiler" class="form-control"
-						ng-model="requestObject.idTipoAlquiler"
-						ng-options="ta.idTipoAlquiler as ta.name for ta in tipoAlquilerList"
-						required>
-					</select> 
-				</div>
-				<div class='form-group'>
-						<label>Cover Image</label>
-						<img ng-src="{{rentFile || DEFAULT_IMAGE}}" width="150px" height="150px"/>
-						<div class="col-sm-8">
-							<input type="file" name="inputfile" ng-file-select="onFileSelect($files)">
-							<span ng-show="onError && createRentForm.inputfile.$error.required" class="help-inline">Required </span>
-						</div>
-				</div>
-					
-				<button id="createButton" class="btn btn-primary"
-					ng-click="saveRent($event)">Create</button>
-					
-				<button id="updateButton" class="btn btn-primary hidden"
-					ng-click="saveRent($event)">Update</button>	
-			</form>					
-		</div>
+	<div class="row">
+		<div ng-click="doClick($index, $event)" ui-grid="{ data: alquileres }"
+			class="myGrid"></div>
 	</div>
 </div>
