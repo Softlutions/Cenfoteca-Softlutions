@@ -11,10 +11,12 @@ import org.springframework.transaction.annotation.Transactional;
 import com.cenfotec.cenfoteca.contracts.UserRentRequest;
 import com.cenfotec.cenfoteca.ejb.Alquiler;
 import com.cenfotec.cenfoteca.ejb.TipoAlquiler;
+import com.cenfotec.cenfoteca.ejb.Usuario;
 import com.cenfotec.cenfoteca.pojo.AlquilerPOJO;
 import com.cenfotec.cenfoteca.pojo.TipoAlquilerPOJO;
 import com.cenfotec.cenfoteca.repositories.RentRepository;
 import com.cenfotec.cenfoteca.repositories.TipoAlquilerRepository;
+import com.cenfotec.cenfoteca.repositories.UsersRepository;
 
 
 @Service
@@ -22,6 +24,7 @@ public class RentService implements RentServiceInterface{
 
 	@Autowired private RentRepository rentRepository;
 	@Autowired private TipoAlquilerRepository tipo;
+	@Autowired private UsersRepository userRepository;
 	
 	@Override
 	@Transactional
@@ -103,7 +106,23 @@ public class RentService implements RentServiceInterface{
 	}
 
 	@Override
-	public UserRentRequest saveItemAlquilado(int idUsuario, int idAlquiler) {
-		return null; // rentRepository.saveItemAlquilado(idUsuario, idAlquiler);
+	@Transactional
+	public boolean saveItemAlquilado(int idUsuario, int idAlquiler) {
+		Usuario user = userRepository.findOne(idUsuario);
+		Alquiler rent = rentRepository.findOne(idAlquiler);
+		if(user.getAlquilers().add(rent) && rent.getUsuarios().add(user)){
+			return true;
+		}
+		return false;
+	}
+
+	@Override
+	@Transactional
+	public boolean returnRent(int idUsuario, int idAlquiler) {
+		Usuario user = userRepository.findOne(idUsuario);
+		Alquiler rent = rentRepository.findOne(idAlquiler);
+		user.getAlquilers().remove(rent);
+		//rent.getUsuarios().remove(user);
+		return true;
 	}
 }
