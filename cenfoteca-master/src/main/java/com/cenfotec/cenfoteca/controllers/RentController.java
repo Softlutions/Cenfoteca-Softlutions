@@ -4,6 +4,7 @@ import javax.servlet.ServletContext;
 import javax.websocket.server.PathParam;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -16,6 +17,7 @@ import com.cenfotec.cenfoteca.contracts.UserRentRequest;
 import com.cenfotec.cenfoteca.ejb.Alquiler;
 import com.cenfotec.cenfoteca.services.RentServiceInterface;
 import com.cenfotec.cenfoteca.services.TipoAlquilerServiceInterface;
+import com.cenfotec.cenfoteca.services.UsersServiceInterface;
 import com.cenfotec.cenfoteca.utils.Utils;
 
 
@@ -85,14 +87,12 @@ public class RentController {
 	//@RequestMapping(value = "/getByUser/{id}", method = RequestMethod.GET)
 	//public RentResponse byUser(@PathVariable String id) {
 		
-		@RequestMapping(value = "/getByUser", method = RequestMethod.GET)
-		public RentResponse byUser() {
-		//return postService.byAuthor(first);
-		
+	@RequestMapping(value = "/getByUser/{userId}", method = RequestMethod.GET)
+	public RentResponse getByUser(@PathVariable("userId") int userId) {		
 		RentResponse response = new RentResponse();
+		response.setAlquileres(rentService.getByUser(userId));
 		response.setCode(200);
 		response.setCodeMessage("user items fetch success");
-		response.setAlquileres(rentService.getByUser(3));
 		return response;
 	}
 	
@@ -140,9 +140,9 @@ public class RentController {
 	public RentResponse saveItemAlquilado(@RequestBody UserRentRequest userRent){	
 		
 		RentResponse response = new RentResponse();
-		UserRentRequest state = rentService.saveItemAlquilado(userRent.getIdUsuario(), userRent.getIdAlquiler());
+		Boolean state = rentService.saveItemAlquilado(userRent.getIdUsuario(), userRent.getIdAlquiler());
 		
-		if(state != null){
+		if(state){
 			response.setCode(200);
 			response.setCodeMessage("rent saved succesfully");
 		}
@@ -152,5 +152,15 @@ public class RentController {
 		}
 		
 		return response;		
+	}
+	
+	@RequestMapping(value ="/returnRent", method = RequestMethod.DELETE)
+	public RentResponse returnRent(@RequestBody UserRentRequest userRent){
+		RentResponse rs = new RentResponse();	
+		rentService.returnRent(userRent.getIdUsuario(), userRent.getIdAlquiler());
+			rs.setCode(200);
+			rs.setCodeMessage("user rent deleted!");
+		
+		return rs;		
 	}
 }

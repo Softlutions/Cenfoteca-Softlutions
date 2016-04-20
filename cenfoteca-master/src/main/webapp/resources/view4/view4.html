@@ -2,13 +2,13 @@
     <h3 class="text-center">Rental List</h3>
     <hr>
 
-	<h3 class="text-center">Rentals Available</h3>
+	<h3 class="text-center">Available Rentals</h3>
 	<table class="table">
 	    <thead>
 	      <tr>
-	        <th>Name</th> 			
-	        <th>Description</th>
-	        <th>Actions</th>
+	        <th class="col-sm-3">Name</th>
+	        <th class="col-sm-6">Description</th>
+	        <th class="col-sm-2">Actions</th>
 	      </tr>
 	    </thead>
 	    <tbody ng-repeat="alquiler in alquileres">
@@ -17,9 +17,6 @@
 	        <td>{{alquiler.description}}</td>
 	        <td>
 	        	<button class="btn btn-info btn-sm" ng-class="" ng-click="saveRent($index)">Rent</button>
-	        </td>
-	       	<td>
-	        	<a class="btn btn-info btn-sm" href="app#/view5/{{alquiler.idAlquiler}}">View more</a>
 	        </td>
 	        </tr>
 	    </tbody>
@@ -31,9 +28,9 @@
 	<table class="table">
 	    <thead>
 	      <tr>
-	        <th>Name</th>
-	        <th>Description</th>
-	        <th>Actions</th>
+	        <th class="col-sm-3">Name</th>
+	        <th class="col-sm-6">Description</th>
+	        <th class="col-sm-2">Actions</th>
 	      </tr>
 	    </thead>
 	    <tbody ng-repeat="alquilado in alquilados">
@@ -41,7 +38,8 @@
 	        <td>{{alquilado.name}}</td>
 	        <td>{{alquilado.description}}</td>
 	       	<td>
-	        	<a class="btn btn-info btn-sm" href="app#/view5/{{alquiler.idAlquiler}}">View more</a>
+
+	        	<button class="btn btn-danger btn-sm" ng-click="returnRent(alquilado.idAlquiler)">Return</button>
 	        </td>
 	        </tr>
 	    </tbody>
