@@ -67,9 +67,6 @@ angular.module('myApp.view3', ['ngRoute', 'ui.grid', 'ui.grid.edit', 'ui.grid.ce
 		$('#updateButton').removeClass('hidden');
 	}
 	
-	
-	
-	
 	$scope.updateTypeUser = function(ptipoUsuario) {
 		$scope.onError = false;
 		var dataUpdate = {
@@ -82,18 +79,6 @@ angular.module('myApp.view3', ['ngRoute', 'ui.grid', 'ui.grid.edit', 'ui.grid.ce
 				$('#updateButton').addClass('hidden');
 				$scope.tipoUsuario.tipo = "";
 			});
-	};
-	
-	$scope.deleteTypeUser = function(tipoUsuario) {
-
-		$scope.onError = false;
-		var dataDelete = {
-			idTipoUsuario : tipoUsuario.idTipoUsuario
-		};
-		
-		$http({method: 'DELETE',url:'rest/protected/tipoUsuario/deleteTypeUser', data:dataDelete, headers: {'Content-Type': 'application/json'}}).success(function(response) {
-			$scope.tipoUsuarios.splice($scope.tipoUsuarios.indexOf(tipoUsuario), 1);
-		});
 	};
 }]);
 
