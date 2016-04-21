@@ -20,60 +20,58 @@ import com.cenfotec.cenfoteca.services.TipoAlquilerServiceInterface;
 import com.cenfotec.cenfoteca.services.UsersServiceInterface;
 import com.cenfotec.cenfoteca.utils.Utils;
 
-
-
 /**
  * Handles requests for the application home page.
  */
 @RestController
-@RequestMapping(value ="rest/protected/rent")
+@RequestMapping(value = "rest/protected/rent")
 public class RentController {
-	
-	@Autowired private ServletContext servletContext;
-	@Autowired private TipoAlquilerServiceInterface tipoAlquilerService;
-	@Autowired private RentServiceInterface rentService;
 
-	@RequestMapping(value ="/create", method = RequestMethod.POST)
-	public RentResponse create(
-			@RequestParam(value="file", required=false) MultipartFile file,
-			@RequestParam("idTipoAlquiler") int idTipoAlquiler,
-			@RequestParam("name") String name,
-			@RequestParam("description") String description,
-			@RequestParam("idRent") int idRent){	
-		
+	@Autowired
+	private ServletContext servletContext;
+	@Autowired
+	private TipoAlquilerServiceInterface tipoAlquilerService;
+	@Autowired
+	private RentServiceInterface rentService;
+
+	@RequestMapping(value = "/create", method = RequestMethod.POST)
+	public RentResponse create(@RequestParam(value = "file", required = false) MultipartFile file,
+			@RequestParam("idTipoAlquiler") int idTipoAlquiler, @RequestParam("name") String name,
+			@RequestParam("description") String description, @RequestParam("idRent") int idRent) {
+
 		RentResponse rs = new RentResponse();
-		
+
 		Alquiler alquiler;
-		
-		if(idRent > 0)
+
+		if (idRent > 0)
 			alquiler = rentService.getById(idRent);
 		else
 			alquiler = new Alquiler();
-		
-		if(file != null){
-			String resultFileName = Utils.writeToFile(file,servletContext);
+
+		if (file != null) {
+			String resultFileName = Utils.writeToFile(file, servletContext);
 			alquiler.setImage(resultFileName);
 		}
-		
+
 		alquiler.setName(name);
 		alquiler.setDescription(description);
 		alquiler.setTipoAlquiler(tipoAlquilerService.getTipoAlquilerById(idTipoAlquiler));
-		
+
 		Boolean state = rentService.saveRent(alquiler);
-		
-		if(state){
+
+		if (state) {
 			rs.setCode(200);
 			rs.setCodeMessage("rent created succesfully");
-		}else{
+		} else {
 			rs.setCode(409);
 			rs.setErrorMessage("create/edit conflict");
 		}
-		
-		return rs;		
+
+		return rs;
 	}
-	
-	@RequestMapping(value ="/getAll", method = RequestMethod.GET)
-	public RentResponse getAll(){
+
+	@RequestMapping(value = "/getAll", method = RequestMethod.GET)
+	public RentResponse getAll() {
 		RentResponse response = new RentResponse();
 		response.setCode(200);
 		response.setCodeMessage("users fetch success");
@@ -81,92 +79,94 @@ public class RentController {
 		response.setTipos(rentService.getAllTipo());
 		return response;
 	};
-	@RequestMapping(value ="/getIsNotRent", method = RequestMethod.GET)
-	public RentResponse getIsNotRent(){
+
+	@RequestMapping(value = "/getIsNotRent", method = RequestMethod.GET)
+	public RentResponse getIsNotRent() {
 		RentResponse response = new RentResponse();
 		response.setCode(200);
 		response.setCodeMessage("items fetch success");
 		response.setAlquileres(rentService.getIsNotRent());
 		return response;
 	};
-	
-	//@RequestMapping(value = "/getByUser/{id}", method = RequestMethod.GET)
-	//public RentResponse byUser(@PathVariable String id) {
-		
+
+	// @RequestMapping(value = "/getByUser/{id}", method = RequestMethod.GET)
+	// public RentResponse byUser(@PathVariable String id) {
+
 	@RequestMapping(value = "/getByUser/{userId}", method = RequestMethod.GET)
-	public RentResponse getByUser(@PathVariable("userId") int userId) {		
+	public RentResponse getByUser(@PathVariable("userId") int userId) {
 		RentResponse response = new RentResponse();
 		response.setAlquileres(rentService.getByUser(userId));
 		response.setCode(200);
 		response.setCodeMessage("user items fetch success");
 		return response;
 	}
-	
-	
-	@RequestMapping(value ="/getById", method = RequestMethod.GET)
-	public RentResponse getById(@PathParam("pidTipoUsuario") int pidRent){
+
+	@RequestMapping(value = "/getById", method = RequestMethod.GET)
+	public RentResponse getById(@PathParam("pidTipoUsuario") int pidRent) {
 		RentResponse response = new RentResponse();
 		response.setCode(200);
 		response.setCodeMessage("users fetch success");
 		response.setAlquiler(rentService.getById(pidRent));
 		return response;
 	};
-	
-	@RequestMapping(value ="/deleteRents", method = RequestMethod.DELETE)
-	public RentResponse deleteRents(@RequestBody Alquiler alquiler){
+
+	@RequestMapping(value = "/deleteRents", method = RequestMethod.DELETE)
+	public RentResponse deleteRents(@RequestBody Alquiler alquiler) {
 		RentResponse rs = new RentResponse();
-		
-		rentService.deleteRent(alquiler);
-		
+		try {
+			rentService.deleteRent(alquiler);
 			rs.setCode(200);
-			rs.setCodeMessage("type user update succesfully");
+			rs.setCodeMessage("Type user update succesfully");
+		} catch (Exception e) {
+			rs.setCode(400);
+			rs.setCodeMessage("This record has asociated data");
+		}
 		
-		return rs;		
+
+		return rs;
 	}
-	
-	@RequestMapping(value ="/updateRent", method = RequestMethod.PUT)
-	public RentResponse modify(@RequestBody Alquiler alquiler){
+
+	@RequestMapping(value = "/updateRent", method = RequestMethod.PUT)
+	public RentResponse modify(@RequestBody Alquiler alquiler) {
 		RentResponse rs = new RentResponse();
-		
+
 		Boolean state = rentService.saveRent(alquiler);
-		
-		if(state){
+
+		if (state) {
 			rs.setCode(200);
 			rs.setErrorMessage("update succesfully");
-		}
-		else{
+		} else {
 			rs.setCode(409);
 			rs.setErrorMessage("update conflict");
 		}
-		
+
 		return rs;
 	}
-	
-	@RequestMapping(value ="/saveRent", method = RequestMethod.POST)
-	public RentResponse saveItemAlquilado(@RequestBody UserRentRequest userRent){	
-		
+
+	@RequestMapping(value = "/saveRent", method = RequestMethod.POST)
+	public RentResponse saveItemAlquilado(@RequestBody UserRentRequest userRent) {
+
 		RentResponse response = new RentResponse();
 		Boolean state = rentService.saveItemAlquilado(userRent.getIdUsuario(), userRent.getIdAlquiler());
-		
-		if(state){
+
+		if (state) {
 			response.setCode(200);
 			response.setCodeMessage("rent saved succesfully");
-		}
-		else{	
+		} else {
 			response.setCode(409);
 			response.setErrorMessage("save conflict");
 		}
-		
-		return response;		
+
+		return response;
 	}
-	
-	@RequestMapping(value ="/returnRent", method = RequestMethod.DELETE)
-	public RentResponse returnRent(@RequestBody UserRentRequest userRent){
-		RentResponse rs = new RentResponse();	
+
+	@RequestMapping(value = "/returnRent", method = RequestMethod.DELETE)
+	public RentResponse returnRent(@RequestBody UserRentRequest userRent) {
+		RentResponse rs = new RentResponse();
 		rentService.returnRent(userRent.getIdUsuario(), userRent.getIdAlquiler());
-			rs.setCode(200);
-			rs.setCodeMessage("user rent deleted!");
-		
-		return rs;		
+		rs.setCode(200);
+		rs.setCodeMessage("user rent deleted!");
+
+		return rs;
 	}
 }

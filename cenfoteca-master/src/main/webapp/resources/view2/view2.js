@@ -132,6 +132,12 @@ angular.module('myApp.view2', [ 'ngRoute' ])
 		
 		$scope.openCreateModal = function(){
 			$('#editCreaterent').modal('show');
+			$scope.name = "";
+			$scope.rentToEdit = null;
+			$scope.description = "";
+			$scope.requestObject = {};
+			$scope.file = null;
+			$scope.rentFile = null;
 			$('#createButton').removeClass('hidden');
 			$('#updateButton').addClass('hidden');
 		}
@@ -142,7 +148,11 @@ angular.module('myApp.view2', [ 'ngRoute' ])
 			};
 			
 			$http({method: 'DELETE',url:'rest/protected/rent/deleteRents', data:dataDelete, headers: {'Content-Type': 'application/json'}}).success(function(response) {
-				$scope.alquileres.splice($scope.alquileres.indexOf(alquiler), 1);
+				if(response.code == 200){
+					$scope.alquileres.splice($scope.alquileres.indexOf(alquiler), 1);
+				}else{
+					toastr.error(response.codeMessage, 'Error')
+				}
 			});
 		};
 	}]);

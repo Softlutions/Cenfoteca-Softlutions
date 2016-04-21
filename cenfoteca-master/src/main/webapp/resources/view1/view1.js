@@ -15,6 +15,5 @@ angular.module('myApp.view1', ['ngRoute'])
 	$http.get('rest/protected/users/getAllUser',$scope.requestObject).success(function(response) {
 		$scope.usuarios = response.usuarios;
 		$scope.loggedUser = JSON.parse(localStorage.loggedUser);
-		
 	});
 }]);

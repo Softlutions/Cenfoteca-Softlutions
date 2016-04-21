@@ -30,13 +30,16 @@ angular.module('myApp.view3', ['ngRoute', 'ui.grid', 'ui.grid.edit', 'ui.grid.ce
 			tipo : $scope.tipoUsuario.tipo
 		};
 		
-		if($scope.tipoUsuario.tipo !=null){
+		if($scope.tipoUsuario.tipo !=null && $scope.tipoUsuario.tipo != ''){
 			$http.post('rest/protected/tipoUsuario/createTypeUser',dataCreate).success(function(response) {
 				$scope.tipoUsuarios = $scope.tipoUsuarios.concat(dataCreate);
+				$('#editCreateUserType').modal('hide');
 			});
+		}else{
+			toastr.error("Empty records can't be saved", 'Error')
 		}
 		
-		$('#editCreateUserType').modal('hide');
+		
 	};
 	
 	$scope.loadData = function(ptipoUsuario){
@@ -66,14 +69,17 @@ angular.module('myApp.view3', ['ngRoute', 'ui.grid', 'ui.grid.edit', 'ui.grid.ce
 			tipo: ptipoUsuario.tipo
 		};
 		
-		$http.put('rest/protected/tipoUsuario/updateTypeUser',dataUpdate).success(function(response) {
-			$scope.userToEdit.tipo = ptipoUsuario.tipo;
-			$('#createButton').removeClass('hidden');
-			$('#updateButton').addClass('hidden');
-			$scope.tipoUsuario.tipo = "";
-		});
-		
-		$('#editCreateUserType').modal('hide');
+		if(ptipoUsuario.tipo != null && ptipoUsuario.tipo != ''){
+			$http.put('rest/protected/tipoUsuario/updateTypeUser',dataUpdate).success(function(response) {
+				$scope.userToEdit.tipo = ptipoUsuario.tipo;
+				$('#createButton').removeClass('hidden');
+				$('#updateButton').addClass('hidden');
+				$scope.tipoUsuario.tipo = "";
+			});
+			$('#editCreateUserType').modal('hide');
+		}else{
+			toastr.error("Empty records can't be saved", 'Error')
+		}
 	};
 	$scope.deleteTypeUser = function(tipoUsuario) {
 		$scope.onError = false;
