@@ -1,63 +1,67 @@
 'use strict';
 
 angular
-		.module('myApp.view4', [ 'ngRoute' ])
-
-		.config([ '$routeProvider', function($routeProvider) {
-			$routeProvider.when('/view4', {
-				templateUrl : 'resources/view4/view4.html',
-				controller : 'View4Ctrl'
+	.module('myApp.view4', [ 'ngRoute' ])
+	
+	.config([ '$routeProvider', function($routeProvider) {
+		$routeProvider.when('/view4', {
+			templateUrl : 'resources/view4/view4.html',
+			controller : 'View4Ctrl'
+		});
+	}])
+	
+	.controller('View4Ctrl',['$scope','$http','$location','$upload',function($scope, $http, $location, $upload) {
+		$scope.rent = {};
+		$scope.files = {};
+		$scope.onError = false;
+		$scope.requestObject = {};
+		$scope.alquileres = [];
+		$scope.alquilados = [];
+		$scope.loggedUser = JSON.parse(localStorage.loggedUser);
+		
+		angular.element(document).ready(function () {
+			$http.get('rest/protected/rent/getAll').success(function(response) {
+				$scope.alquileres = response.alquileres;
+				$http.get('rest/protected/rent/getByUser/'+$scope.loggedUser.idUser).success(function(response) {
+					$scope.alquilados = response.alquileres;
+					$scope.alquilados.forEach(function(alquiler){
+						var index = $scope.alquileres.map(function(x) {return x.idAlquiler; }).indexOf(alquiler.idAlquiler);
+						if(index!=-1){
+							$scope.alquileres.splice(index,1);
+						}
+					});
+				});
+			});						
+		});
+		
+		$scope.returnRent = function(rentId) {
+			var dataCreate = {
+				idUsuario : $scope.loggedUser.idUser,
+				idAlquiler : rentId
+			};
+		 	$http({method: 'DELETE',url:'rest/protected/rent/returnRent', data:dataCreate, headers: {'Content-Type': 'application/json'}}).success(function(response) {			 	 
+			 	if (response.code == 200) {
+			 		var index = $scope.alquilados.map(function(x) {return x.idAlquiler; }).indexOf(rentId);
+			 		$scope.alquileres.push($scope.alquilados[index]);
+					$scope.alquilados.splice(index,1);	
+			 	}
+		 	});
+		 };
+	
+		$scope.saveRent = function(index){
+			var selectedRent = $scope.alquileres[index];
+			$scope.alquilados.push(selectedRent);
+			$scope.alquileres.splice(index,1);	
+			
+			var dataCreate = {
+				idUsuario : $scope.loggedUser.idUser,
+				idAlquiler : selectedRent.idAlquiler
+			};
+			
+			$http.post('rest/protected/rent/saveRent',dataCreate).success(function(response) {
+				
 			});
-		} ])
-
-		.controller(
-				'View4Ctrl',
-				[
-						'$scope',
-						'$http',
-						'$location',
-						'$upload',
-						function($scope, $http, $location, $upload) {
-
-							$scope.rent = {};
-							$scope.files = {};
-							$scope.onError = false;
-							$scope.requestObject = {};
-
-							$scope.alquileres = [];
-							$scope.requestObject = {"pageNumber": 0,"pageSize": 0,"direction": "","sortBy": [""],"searchColumn": "string","searchTerm": "","user": {}};
-							$http.get('rest/protected/rent/getIsNotRent',$scope.requestObject).success(function(response) {
-								console.log("response",response)
-								$scope.alquileres = response.alquileres;
-								console.log("$scope.usuarios",$scope.usuarios)
-							});
-							
-							$scope.alquilados = [];
-							$http.get('rest/protected/rent/getByUser',$scope.requestObject).success(function(response) {
-								console.log("response",response)
-								$scope.alquilados = response.alquileres;
-								console.log("$scope.usuarios",$scope.usuarios)
-								
-							$scope.saveRent = function(id){
-								$scope.alquilados.push($scope.alquileres[id]);
-								$scope.alquileres.splice(id,1);	
-								
-					/*			$scope.onError = false;
-								var dataCreate = {
-									idUsuario : $scope.tipoUsuario.tipo,
-									idALquiler : $scope
-								};
-								if($scope.tipoUsuario.tipo !=null){
-								$http.post('rest/protected/rent/saveRent',dataCreate).success(function(response) {
-									console.log("response",response)
-									$scope.tipoUsuarios = $scope.tipoUsuarios.concat(dataCreate);
-								});
-								}else{
-									alert('Mal')
-								} */
-							};
-							});
-						} 
-				]);
-
-
+		};			
+}]);
+	
+	

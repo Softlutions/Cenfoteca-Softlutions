@@ -12,7 +12,7 @@ angular.module('myApp', [
   'angularFileUpload'
 ])
 .config(['$routeProvider','$provide','$httpProvider', function($routeProvider,$provide,$httpProvider) {
-	$routeProvider.otherwise({redirectTo: '/view3'});
+	$routeProvider.otherwise({redirectTo: '/view1'});
   
 	$provide.factory('responseHttpInterceptor', function($q) {
 		  return {
